@@ -1,0 +1,26 @@
+name: make-artifact
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  make-artifact:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: make_artifact
+        run: |
+          python folder1/make_artifact.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: folder1/dist/ # or path/to/artifact

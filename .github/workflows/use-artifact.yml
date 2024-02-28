@@ -1,0 +1,26 @@
+name: Production deploy
+on:
+  workflow_run:
+    workflows: ["make-artifact"]
+    types:
+      - completed
+jobs:
+  job1:
+    runs-on: ubuntu-22.04
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - uses: actions/download-artifact@v4
+        with:
+          name: my-artifact
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: make_artifact
+        run: |
+          python folder2/use_artifact.py
+
+      - name: check contents
+        run: |
+          cat folder2/dist/output.txt
